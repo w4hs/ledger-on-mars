@@ -8,6 +8,7 @@ This is only the API
 ```bash
 cp config/database.sample.yml config/database.yml
 cp config/puma.sample.rb config/puma.rb
+cp config/credentials.sample.yml.enc config/credentials.yml.enc
 cp config/master.sample.key config/master.key
 ```
 

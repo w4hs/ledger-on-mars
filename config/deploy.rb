@@ -1,14 +1,18 @@
 # config valid for current version and patch releases of Capistrano
-lock "~> 3.16.0"
+lock '~> 3.16.0'
 
-set :application, "ledger-on-mars"
-set :repo_url, "git@github.com:w4hs/ledger-on-mars.git"
+set :application, 'ledger-on-mars'
+set :repo_url, 'git@github.com:w4hs/ledger-on-mars.git'
+set :rails_env, 'production'
 
 # Default branch is :master
-ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
+set :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, "/var/www/ledger-mars"
+set :deploy_to, '/var/www/app'
+
+set :repository_cache, 'git_cache'
+set :deploy_via, :remote_cache
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
@@ -21,10 +25,13 @@ set :deploy_to, "/var/www/ledger-mars"
 # set :pty, true
 
 # Default value for :linked_files is []
-append :linked_files, "config/database.yml"
+append :linked_files, 'config/database.yml'
+append :linked_files, 'config/puma.rb'
+append :linked_files, 'config/credentials.yml.enc'
+append :linked_files, 'config/master.key'
 
 # Default value for linked_dirs is []
-append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
+append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system'
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
