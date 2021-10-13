@@ -30,3 +30,5 @@ config/puma.rb
 config/credentials.yml.enc
 config/master.key
 config/database.yml
+config/deploy/staging.rb
+config/deploy/production.rb
