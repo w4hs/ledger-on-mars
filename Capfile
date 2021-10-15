@@ -18,6 +18,9 @@ install_plugin Capistrano::SCM::Git
 require 'capistrano/rails'
 require 'rvm1/capistrano3'
 
+require 'capistrano/puma'
+install_plugin Capistrano::Puma
+install_plugin Capistrano::Puma::Systemd
 
 # Include tasks from other gems included in your Gemfile
 #
@@ -39,3 +42,4 @@ require "capistrano/rails/migrations"
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
 Dir.glob("lib/capistrano/tasks/*.rake").each { |r| import r }
+
