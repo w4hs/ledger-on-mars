@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_16_115949) do
+ActiveRecord::Schema.define(version: 2021_10_17_170506) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,80 @@ ActiveRecord::Schema.define(version: 2021_10_16_115949) do
     t.datetime "last_update"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "keepr_accounts", id: :serial, force: :cascade do |t|
+    t.integer "number", null: false
+    t.string "ancestry"
+    t.string "name", null: false
+    t.integer "kind", null: false
+    t.integer "keepr_group_id"
+    t.string "accountable_type"
+    t.integer "accountable_id"
+    t.integer "keepr_tax_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.bigint "user_id", null: false
+    t.index ["accountable_type", "accountable_id"], name: "index_keepr_accounts_on_accountable"
+    t.index ["ancestry"], name: "index_keepr_accounts_on_ancestry"
+    t.index ["keepr_group_id"], name: "index_keepr_accounts_on_keepr_group_id"
+    t.index ["keepr_tax_id"], name: "index_keepr_accounts_on_keepr_tax_id"
+    t.index ["number"], name: "index_keepr_accounts_on_number"
+    t.index ["user_id"], name: "index_keepr_accounts_on_user_id"
+  end
+
+  create_table "keepr_cost_centers", id: :serial, force: :cascade do |t|
+    t.string "number", null: false
+    t.string "name", null: false
+    t.text "note"
+  end
+
+  create_table "keepr_groups", id: :serial, force: :cascade do |t|
+    t.integer "target", null: false
+    t.string "number"
+    t.string "name", null: false
+    t.boolean "is_result", default: false, null: false
+    t.string "ancestry"
+    t.bigint "workspace_id"
+    t.bigint "user_id", null: false
+    t.index ["ancestry"], name: "index_keepr_groups_on_ancestry"
+    t.index ["user_id"], name: "index_keepr_groups_on_user_id"
+    t.index ["workspace_id"], name: "index_keepr_groups_on_workspace_id"
+  end
+
+  create_table "keepr_journals", id: :serial, force: :cascade do |t|
+    t.string "number"
+    t.date "date", null: false
+    t.string "subject"
+    t.string "accountable_type"
+    t.integer "accountable_id"
+    t.text "note"
+    t.boolean "permanent", default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["accountable_type", "accountable_id"], name: "index_keepr_journals_on_accountable"
+    t.index ["date"], name: "index_keepr_journals_on_date"
+  end
+
+  create_table "keepr_postings", id: :serial, force: :cascade do |t|
+    t.integer "keepr_account_id", null: false
+    t.integer "keepr_journal_id", null: false
+    t.decimal "amount", precision: 8, scale: 2, null: false
+    t.integer "keepr_cost_center_id"
+    t.string "accountable_type"
+    t.integer "accountable_id"
+    t.index ["accountable_type", "accountable_id"], name: "index_keepr_postings_on_accountable"
+    t.index ["keepr_account_id"], name: "index_keepr_postings_on_keepr_account_id"
+    t.index ["keepr_cost_center_id"], name: "index_keepr_postings_on_keepr_cost_center_id"
+    t.index ["keepr_journal_id"], name: "index_keepr_postings_on_keepr_journal_id"
+  end
+
+  create_table "keepr_taxes", id: :serial, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "description"
+    t.decimal "value", precision: 8, scale: 2, null: false
+    t.integer "keepr_account_id", null: false
+    t.index ["keepr_account_id"], name: "index_keepr_taxes_on_keepr_account_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -64,5 +138,7 @@ ActiveRecord::Schema.define(version: 2021_10_16_115949) do
     t.index ["user_id"], name: "index_workspaces_on_user_id"
   end
 
+  add_foreign_key "keepr_accounts", "users"
+  add_foreign_key "keepr_groups", "users"
   add_foreign_key "workspaces", "users"
 end
